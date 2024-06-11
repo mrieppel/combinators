@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Combinator Converter</title>
+
+<script type="text/javascript" src="combinators.js"></script>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+<style type="text/css">
+
+body {
+  font-family: "Open Sans", Verdana, Helvetica, sans-serif;
+  color:#444444;
+  height:100%;
+  background-color:white;
+  margin: 0px;
+  padding: 0px;
+}
+
+a:link {color:#4B2EDE;text-decoration:none;}      /* unvisited link */
+a:visited {color:#4B2EDE;text-decoration:none;}  /* visited link */
+a:hover {color:#9D90DC;text-decoration:none;}  /* mouse over link */
+a:active {color:#FFA04D;text-decoration:none;}  /* selected link */
+
+
+#container {
+  width:90%;
+  max-width: 800px;
+  position: relative;
+  min-height: 100vh;
+  margin-right:auto;
+  margin-left:auto;
+  font-size:16px;
+  padding-bottom:40px;
+}
+
+#location {
+  color:#999999;
+  font-size:14px;
+  padding-top:5px;
+}
+
+#location a {
+  color:#999999;
+}
+
+#githublink {
+  position:absolute;
+  top:5px;
+  right:5px;
+}
+
+#title {
+  text-align:center;
+  font-size:26px;
+  margin-top:15px;
+  margin-bottom:20px;
+}
+
+
+.ttinput {
+  margin-left:auto;
+  margin-right:auto;
+  padding-top:5px;
+  padding-bottom:5px;
+}
+
+.tt {
+  width:100%;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-top:solid 1px #d3d3d3;
+  border-bottom:solid 1px #d3d3d3;
+  min-height:80px;
+}
+
+.tt p {
+  line-height:200%;
+  text-align:left;
+}
+
+td.connective {
+  padding-right:1em;
+}
+
+footer {
+  font-size:85%;
+  color:#aaaaaa;
+  text-align:center;
+  position:absolute;
+  bottom:0;
+  width:100%;
+  padding:5px;
+}
+
+</style>
+
+<script type="text/javascript">
+
+
+function runit() {
+	var formula = document.getElementById('in1').value.replace(/ /g,'');// remove whitespace
+	if(formula=='') {return alert("You have to enter a formula.");};
+	
+	var sol = parse(formula);
+	var lam = parsel(formula);
+
+  	if(sol.length>0) {
+		var l = lambdafy(sol);
+		var c = combify(l);
+		var c2 = combify2(l);
+		console.log(unparsel(c2));
+		document.getElementById('tt1').innerHTML = "<p><b>Input:</b> "+formula+"<br><b>Lambdafied:</b> "+unparsel(l)+"<br><b>Combified:</b> "+unparsel(c)+"<br><b>Efficiently Combified:</b> "+unparsel(c2)+"</p>";
+	} else if(lam.length>0){
+		document.getElementById('tt1').innerHTML = "<p><b>Input:</b> "+formula+"<br><b>Combified:</b> "+unparsel(combify(lam))+"<br><b>Efficiently Combified:</b> "+unparsel(combify2(lam))+"</p>";
+	} else {
+		return alert("Sorry, unable to parse input as a SOL formula or lambda term.");
+	}
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div id='container'>
+
+<div id='title'>Combinator Converter</div>
+
+<p>Enter either a formula of second-order logic, or a lambda term, then press the "Combify!" button to convert it into an equivalent variable-free term.  "Combified" returns a variable-free term involving only the combinators S, K, and I (plus constants and free variables from the original formula). "Efficient Combified" returns a usually shorter variable-free term involving only the combinators S, K, I, B, and C (plus constants and free variables from the original formula)</p>
+
+<div class="ttinput">
+  <input type="text" class="in" id="in1" size="40">
+  <input type="button" value="Combify!" onclick="runit();">
+</div>
+
+<div class="tt" id="tt1"></div>
+
+
+<p>Note that the program demands strictly well-formed inputs, it doesn't implement abbreviations like dropping parentheses.  Below are some examples of well formed SOL/FOL formulas and lambda terms, I'll write down the official syntax at some point in the future.</b>
+
+<p><b>Second-Order Logic:</b></p>
+
+<ul>
+<li>(P > (Q v ~R))</li>
+<li>AxEyRxy</li>
+<li>Ex(Fx & Gx)</li>
+<li>EX(Xa v Xb)</li>
+<li>AXAxAy(x=y>(Xx > Xy))</li>
+</ul>
+
+
+<p><b>Lambda Terms:</b></p>
+
+<ul>
+<li>(|X.(|y.(Xy)))</li>
+<li>(|x.((Zy)x))</li>
+<li>(|x.((Zx)(Yx)))</li>
+<li>(|X.(|Y.(|z.(X(Yz)))))</li>
+<li>(E(|x.((&(Fx))(Gx))))</li>
+<li>(A(|x.(E(|y.((Rx)y)))))</li>
+</ul>
+
+<p>To do: build beta reducer to show that the combinator terms actually mean what we want them to.</p>
+
+<footer>&copy; 2024 Michael Rieppel</footer>
+
+</div>
+<!-- Close container div -->
+
+
+<!-- Start of StatCounter Code for Default Guide -->
+
+
+<!-- End of StatCounter Code for Default Guide -->
+
+
+</body>
+
+</html>
